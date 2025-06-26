@@ -1,0 +1,183 @@
+package files;
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.Scanner;
+
+public class FileOperations {
+
+    // 1. Create a new file
+    public static void createFile(String filename) {
+        File file = new File(filename);
+        try {
+            if (file.createNewFile()) {
+                System.out.println("File created: " + filename);
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error creating file.");
+            e.printStackTrace();
+        }
+    }
+
+    // 2. Write using FileWriter
+    public static void writeFile(String filename, String content) {
+        try {
+            FileWriter fw = new FileWriter(filename, true);
+            fw.write(content);
+            fw.close();
+            System.out.println("Written using FileWriter.");
+        } catch (IOException e) {
+            System.out.println("Error writing file.");
+            e.printStackTrace();
+        }
+    }
+
+    // 3. Write using BufferedWriter
+    public static void bufferedWrite(String filename, String line1, String line2) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(filename, true));
+            bw.write(line1);
+            bw.newLine();
+            bw.write(line2);
+            bw.newLine();
+            bw.close();
+            System.out.println("Written using BufferedWriter.");
+        } catch (IOException e) {
+            System.out.println("Error in buffered writing.");
+            e.printStackTrace();
+        }
+    }
+
+    // 4. Read using FileReader
+    public static void readFile(String filename) {
+        try {
+            FileReader fr = new FileReader(filename);
+            int c;
+            System.out.println("FileReader Output:");
+            while ((c = fr.read()) != -1) {
+                System.out.print((char) c);
+            }
+            fr.close();
+        } catch (IOException e) {
+            System.out.println("Error reading file.");
+            e.printStackTrace();
+        }
+    }
+
+    // 5. Read using BufferedReader
+    public static void bufferedRead(String filename) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            String line;
+            System.out.println("\nBufferedReader Output:");
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("Error in buffered reading.");
+            e.printStackTrace();
+        }
+    }
+
+    // 6. Update file content
+    public static void updateFile(String filename, String oldText, String newText) {
+        try {
+            Path path = Paths.get(filename);
+            String content = new String(Files.readAllBytes(path));
+            content = content.replace(oldText, newText);
+            Files.write(path, content.getBytes());
+            System.out.println("File updated successfully.");
+        } catch (IOException e) {
+            System.out.println("Error updating file.");
+            e.printStackTrace();
+        }
+    }
+
+    // 7. Delete a file
+    public static void deleteFile(String filename) {
+        File file = new File(filename);
+        if (file.delete()) {
+            System.out.println("File deleted successfully: " + file.getName());
+        } else {
+            System.out.println("Failed to delete the file. It may not exist.");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("FILES HANDLING MENU");
+        System.out.println("1. Create File");
+        System.out.println("2. Write using FileWriter");
+        System.out.println("3. Write using BufferedWriter");
+        System.out.println("4. Read using FileReader");
+        System.out.println("5. Read using BufferedReader");
+        System.out.println("6. Update File");
+        System.out.println("7. Delete File");
+        System.out.print("Enter your choice (1-7): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // consume leftover newline
+
+        switch (choice) {
+            case 1:
+                System.out.print("Enter file name to create: ");
+                String file1 = scanner.nextLine();
+                createFile(file1);
+                break;
+
+            case 2:
+                System.out.print("Enter file name to write to: ");
+                String file2 = scanner.nextLine();
+                System.out.print("Enter content: ");
+                String content = scanner.nextLine();
+                writeFile(file2, content);
+                break;
+
+            case 3:
+                System.out.print("Enter file name to write to: ");
+                String file3 = scanner.nextLine();
+                System.out.print("Enter first line: ");
+                String line1 = scanner.nextLine();
+                System.out.print("Enter second line: ");
+                String line2 = scanner.nextLine();
+                bufferedWrite(file3, line1, line2);
+                break;
+
+            case 4:
+                System.out.print("Enter file name to read: ");
+                String file4 = scanner.nextLine();
+                readFile(file4);
+                break;
+
+            case 5:
+                System.out.print("Enter file name to read: ");
+                String file5 = scanner.nextLine();
+                bufferedRead(file5);
+                break;
+
+            case 6:
+                System.out.print("Enter file name to update: ");
+                String file6 = scanner.nextLine();
+                System.out.print("Enter word to replace: ");
+                String oldText = scanner.nextLine();
+                System.out.print("Enter new word: ");
+                String newText = scanner.nextLine();
+                updateFile(file6, oldText, newText);
+                break;
+
+            case 7:
+                System.out.print("Enter file name to delete: ");
+                String file7 = scanner.nextLine();
+                deleteFile(file7);
+                break;
+
+            default:
+                System.out.println("Invalid option. Please choose between 1 and 7.");
+        }
+
+        scanner.close();
+    }
+}
